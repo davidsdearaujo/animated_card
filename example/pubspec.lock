@@ -4,9 +4,9 @@ packages:
   animated_card:
     dependency: "direct main"
     description:
-      path: ".."
-      relative: true
-    source: path
+      name: animated_card
+      url: "https://pub.dartlang.org"
+    source: hosted
     version: "1.0.0"
   async:
     dependency: transitive
