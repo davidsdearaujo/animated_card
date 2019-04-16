@@ -2,7 +2,7 @@
 
 Package to animate the initialization of any widget, with the possibility of using a custom dismissible.
 
-![](https://github.com/davidsdearaujo/animated_card/raw/master/example.gif)
+![](https://github.com/davidsdearaujo/animated_card/raw/master/example.gif) ![](https://github.com/davidsdearaujo/animated_card/raw/master/example2.gif)
 
 ## How to use
 pubspec.yaml
