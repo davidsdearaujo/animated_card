@@ -10,7 +10,7 @@ dependencies:
     sdk: flutter
 
   cupertino_icons: ^0.1.2
-  animated_card: ^1.0.0
+  animated_card: ^1.0.0+2
 
 dev_dependencies:
   flutter_test:

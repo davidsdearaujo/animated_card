@@ -9,12 +9,14 @@ export 'animated_card_direction.dart';
 export 'animated_card_mixin.dart';
 
 class AnimatedCard extends StatefulWidget {
+  final bool keepAlive;
   final void Function() onRemove;
   final Widget child;
 
   final AnimatedCardDirection direction;
   final Duration duration;
   final Duration initDelay;
+  final Offset initOffset;
   bool _removed = false;
   AnimatedCard({
     Key key,
@@ -23,6 +25,8 @@ class AnimatedCard extends StatefulWidget {
     this.onRemove,
     this.duration,
     this.initDelay,
+    this.initOffset,
+    this.keepAlive = false,
   })  : assert(child != null),
         super(key: key ?? ((onRemove == null) ? null : UniqueKey()));
 
@@ -31,10 +35,27 @@ class AnimatedCard extends StatefulWidget {
 }
 
 class _AnimatedCardState extends State<AnimatedCard>
-    with TickerProviderStateMixin, AnimatedCardMixin {
+    with
+        TickerProviderStateMixin,
+        AnimatedCardMixin,
+        AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
+
+  @override
   Duration get initDelay => widget.initDelay ?? Duration(milliseconds: 200);
+
+  @override
   Duration get duration => widget.duration ?? Duration(milliseconds: 600);
+
+  @override
   AnimatedCardDirection get direction => widget.direction;
+
+  @override
+  Offset get initOffset => widget.initOffset;
+
+  bool get removeable => widget.onRemove != null;
+  bool get notRemoveable => widget.onRemove == null;
 
   @override
   void initState() {
@@ -87,61 +108,71 @@ class _AnimatedCardState extends State<AnimatedCard>
   }
 
   Widget _buildRemoveButton() {
-    return AnimatedBuilder(
-      animation: removeController,
-      builder: (context, childWidget) {
-        var removeButtonX =
-            -MediaQuery.of(context).size.width * 0.2 * removeAnimation.value;
-        return Transform.translate(
-          offset: Offset(optionsRemoveButtonAnimation.value + removeButtonX, 0),
-          child: childWidget,
-        );
-      },
-      child: Container(
-        width: MediaQuery.of(context).size.width / 3,
-        child: Column(
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.delete, color: Colors.red),
-              onPressed: () async {
-                if (widget.onRemove != null) {
-                  await removeController.forward();
-                  widget._removed = true;
-                  widget.onRemove();
-                }
-              },
+    return notRemoveable
+        ? Container()
+        : AnimatedBuilder(
+            animation: removeController,
+            builder: (context, childWidget) {
+              var removeButtonX = -MediaQuery.of(context).size.width *
+                  0.2 *
+                  removeAnimation.value;
+              return Transform.translate(
+                offset: Offset(
+                    optionsRemoveButtonAnimation.value + removeButtonX, 0),
+                child: childWidget,
+              );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width / 3,
+              child: Column(
+                children: <Widget>[
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    onPressed: () async {
+                      if (widget.onRemove != null) {
+                        await removeController.forward();
+                        widget._removed = true;
+                        widget.onRemove();
+                      }
+                    },
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
-    );
+          );
   }
 
   Widget _buildCard() {
-    return AnimatedBuilder(
-      animation: removeController,
-      child: widget.child,
-      builder: (context, childWidget) {
-        var position =
-            MediaQuery.of(context).size.width * 2 / 3 * removeAnimation.value;
-        return Transform.translate(
-          offset: Offset(position, 0),
-          child: childWidget,
-        );
-      },
-    );
+    return notRemoveable
+        ? widget.child
+        : AnimatedBuilder(
+            animation: removeController,
+            child: widget.child,
+            builder: (context, childWidget) {
+              var position = MediaQuery.of(context).size.width *
+                  2 /
+                  3 *
+                  removeAnimation.value;
+              return Transform.translate(
+                offset: Offset(position, 0),
+                child: childWidget,
+              );
+            },
+          );
   }
 
   Widget _buildRemoveAnimation({Widget child}) {
-    return AnimatedBuilder(
-      animation: removeHeightAnimation,
-      child: child,
-      builder: (context, childWidget) {
-        return Align(
-          heightFactor: removeHeightAnimation.value,
-          child: childWidget,
-        );
-      },
-    );
+    return notRemoveable
+        ? child
+        : AnimatedBuilder(
+            animation: removeHeightAnimation,
+            child: child,
+            builder: (context, childWidget) {
+              return Align(
+                heightFactor: removeHeightAnimation.value,
+                child: childWidget,
+              );
+            },
+          );
   }
 }

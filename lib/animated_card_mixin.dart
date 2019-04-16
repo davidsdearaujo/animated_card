@@ -22,6 +22,7 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
   Duration get initDelay;
   Duration get duration;
   AnimatedCardDirection get direction;
+  Offset get initOffset; 
 
   @override
   void initState() {
@@ -65,7 +66,7 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
 
     //animations
     initAnimation = Tween<Offset>(
-      begin: initialOffset[direction],
+      begin: initOffset ?? initialOffset[direction],
       end: Offset(0, 0),
     ).animate(controller);
 
