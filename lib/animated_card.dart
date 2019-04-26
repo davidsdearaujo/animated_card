@@ -130,9 +130,17 @@ class _AnimatedCardState extends State<AnimatedCard>
                     icon: Icon(Icons.delete, color: Colors.red),
                     onPressed: () async {
                       if (widget.onRemove != null) {
-                        await removeController.forward();
-                        widget._removed = true;
-                        widget.onRemove();
+                        futures.add(
+                          removeController.forward().asStream().listen(
+                            (data) {
+                              widget._removed = true;
+                              widget.onRemove();
+                            },
+                          ),
+                        );
+                        // await removeController.forward();
+                        // widget._removed = true;
+                        // widget.onRemove();
                       }
                     },
                   ),
@@ -149,10 +157,9 @@ class _AnimatedCardState extends State<AnimatedCard>
             animation: removeController,
             child: widget.child,
             builder: (context, childWidget) {
-              var position = MediaQuery.of(context).size.width *
-                  2 /
-                  3 *
-                  removeAnimation.value;
+              var position = MediaQuery.of(context).size.width;
+              position *= 2 / 3 * removeAnimation.value;
+              
               return Transform.translate(
                 offset: Offset(position, 0),
                 child: childWidget,

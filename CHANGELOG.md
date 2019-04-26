@@ -1,3 +1,7 @@
+## [1.0.0+5] - 2019.04.26
+
+* Performance improvements
+
 ## [1.0.0+3] - 2019.04.15
 
 * Added "keepAlive" and "initialOffset" parameters

@@ -18,6 +18,8 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
   Animation<double> removeHeightAnimation;
 
   bool removed;
+  Timer initTimer;
+  var futures = <StreamSubscription>[];
 
   Duration get initDelay;
   Duration get duration;
@@ -88,13 +90,15 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
       removeCurve(Interval(0.5, 1)),
     );
 
-    Timer(initDelay, () {
+    initTimer = Timer(initDelay, () {
       controller.forward();
     });
   }
 
   @override
   void dispose() {
+    initTimer.cancel();
+    futures.forEach((f) => f.cancel());
     controller.dispose();
     removeController.dispose();
     super.dispose();
