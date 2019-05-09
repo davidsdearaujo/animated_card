@@ -24,7 +24,7 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
   Duration get initDelay;
   Duration get duration;
   AnimatedCardDirection get direction;
-  Offset get initOffset; 
+  Offset get initOffset;
 
   @override
   void initState() {
@@ -90,9 +90,11 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
       removeCurve(Interval(0.5, 1)),
     );
 
-    initTimer = Timer(initDelay, () {
-      controller.forward();
-    });
+    futures.add(
+      Future.delayed(initDelay)
+          .asStream()
+          .listen((_) => () => controller.forward()),
+    );
   }
 
   @override
