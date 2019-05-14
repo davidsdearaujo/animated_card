@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_web/material.dart';
 
 enum AnimatedCardDirection { left, right, top, bottom }
 Map<AnimatedCardDirection, Offset> initialOffset;

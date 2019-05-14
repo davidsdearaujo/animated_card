@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_web/material.dart';
 import 'package:animated_card/animated_card.dart';
 
 void main() => runApp(MyApp());

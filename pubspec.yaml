@@ -1,6 +1,6 @@
 name: animated_card
 description: Package to animate the initialization of any widget, with the possibility of using a custom dismissible.
-version: 1.0.0+5
+version: 1.0.0
 author: David Araujo - Flutterando <davidsdearaujo@gmail.com>
 homepage: https://github.com/davidsdearaujo
 
@@ -8,11 +8,20 @@ environment:
   sdk: ">=2.1.0 <3.0.0"
 
 dependencies:
-  flutter:
-    sdk: flutter
+  flutter_web: any
+  flutter_web_ui: any
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
 flutter:
+dependency_overrides:
+  flutter_web:
+    git:
+      url: https://github.com/flutter/flutter_web
+      path: packages/flutter_web
+  flutter_web_ui:
+    git:
+      url: https://github.com/flutter/flutter_web
+      path: packages/flutter_web_ui

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter_web/material.dart';
 import 'animated_card_direction.dart';
 
 mixin AnimatedCardMixin<T extends StatefulWidget>

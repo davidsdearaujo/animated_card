@@ -1,6 +1,6 @@
 library animated_card;
 
-import 'package:flutter/material.dart';
+import 'package:flutter_web/material.dart';
 
 import 'animated_card_mixin.dart';
 import 'animated_card_direction.dart';
