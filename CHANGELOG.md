@@ -1,3 +1,7 @@
+## [1.0.0+6] - 2019.06.21
+
+* Performance improvements
+
 ## [1.0.0+5] - 2019.04.26
 
 * Performance improvements

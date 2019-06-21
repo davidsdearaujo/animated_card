@@ -1,6 +1,6 @@
 name: animated_card
 description: Package to animate the initialization of any widget, with the possibility of using a custom dismissible.
-version: 1.0.0+5
+version: 1.0.0+6
 author: David Araujo - Flutterando <davidsdearaujo@gmail.com>
 homepage: https://github.com/davidsdearaujo
 
