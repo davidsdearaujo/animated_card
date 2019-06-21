@@ -65,6 +65,7 @@ class _AnimatedCardState extends State<AnimatedCard>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return _buildRemoveAnimation(
       child: GestureDetector(
         onHorizontalDragUpdate: (details) {
