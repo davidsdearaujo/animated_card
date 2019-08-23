@@ -1,3 +1,8 @@
+## [1.0.0+6] - 2019.08.23
+
+* Added propertie "curve"
+* Fixed trash that appeared outside of card
+
 ## [1.0.0+6] - 2019.06.21
 
 * Performance improvements
