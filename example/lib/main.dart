@@ -31,6 +31,7 @@ class ListagemScreen extends StatelessWidget {
             initDelay: Duration(milliseconds: 0), //Delay to initial animation
             duration: Duration(seconds: 1), //Initial animation duration
             onRemove: () => lista.removeAt(index), //Implement this action to active dismiss
+            curve: Curves.bounceOut, //Animation curve
             child: Container(
               padding: EdgeInsets.symmetric(horizontal: 10),
               child: Card(
