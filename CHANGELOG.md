@@ -1,4 +1,4 @@
-## [1.0.0+6] - 2019.08.23
+## [1.0.0+7] - 2019.08.23
 
 * Added propertie "curve"
 * Fixed trash that appeared outside of card
