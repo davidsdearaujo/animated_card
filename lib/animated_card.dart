@@ -17,6 +17,7 @@ class AnimatedCard extends StatefulWidget {
   final Duration duration;
   final Duration initDelay;
   final Offset initOffset;
+  final Curve curve;
   bool _removed = false;
   AnimatedCard({
     Key key,
@@ -27,6 +28,7 @@ class AnimatedCard extends StatefulWidget {
     this.initDelay,
     this.initOffset,
     this.keepAlive = false,
+    this.curve = Curves.ease,
   })  : assert(child != null),
         super(key: key ?? ((onRemove == null) ? null : UniqueKey()));
 
@@ -52,6 +54,9 @@ class _AnimatedCardState extends State<AnimatedCard>
   AnimatedCardDirection get direction => widget.direction;
 
   @override
+  Curve get curve => widget.curve;
+
+  @override
   Offset get initOffset => widget.initOffset;
 
   bool get removeable => widget.onRemove != null;
@@ -66,42 +71,44 @@ class _AnimatedCardState extends State<AnimatedCard>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return _buildRemoveAnimation(
-      child: GestureDetector(
-        onHorizontalDragUpdate: (details) {
-          if (widget.onRemove != null)
-            optionsController.value +=
-                details.primaryDelta / MediaQuery.of(context).size.width * 3;
-        },
-        onHorizontalDragEnd: (details) {
-          if (optionsController.value > 0.5)
-            optionsController.forward();
-          else
-            optionsController.reverse();
-        },
-        child: AnimatedBuilder(
-          animation: initAnimation,
-          builder: (context, child) {
-            return Transform.translate(
-              offset: initAnimation.value,
-              child: child,
-            );
+    return ClipRect(
+      child: _buildRemoveAnimation(
+        child: GestureDetector(
+          onHorizontalDragUpdate: (details) {
+            if (widget.onRemove != null)
+              optionsController.value +=
+                  details.primaryDelta / MediaQuery.of(context).size.width * 3;
+          },
+          onHorizontalDragEnd: (details) {
+            if (optionsController.value > 0.5)
+              optionsController.forward();
+            else
+              optionsController.reverse();
           },
           child: AnimatedBuilder(
-            animation: optionsController,
-            builder: (context, childWidget) {
-              return Stack(
-                alignment: Alignment.centerLeft,
-                children: <Widget>[
-                  _buildRemoveButton(),
-                  Transform.translate(
-                    offset: Offset(optionsCardAnimation.value, 0),
-                    child: childWidget,
-                  ),
-                ],
+            animation: initAnimation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: initAnimation.value,
+                child: child,
               );
             },
-            child: _buildCard(),
+            child: AnimatedBuilder(
+              animation: optionsController,
+              builder: (context, childWidget) {
+                return Stack(
+                  alignment: Alignment.centerLeft,
+                  children: <Widget>[
+                    _buildRemoveButton(),
+                    Transform.translate(
+                      offset: Offset(optionsCardAnimation.value, 0),
+                      child: childWidget,
+                    ),
+                  ],
+                );
+              },
+              child: _buildCard(),
+            ),
           ),
         ),
       ),
@@ -160,7 +167,7 @@ class _AnimatedCardState extends State<AnimatedCard>
             builder: (context, childWidget) {
               var position = MediaQuery.of(context).size.width;
               position *= 2 / 3 * removeAnimation.value;
-              
+
               return Transform.translate(
                 offset: Offset(position, 0),
                 child: childWidget,

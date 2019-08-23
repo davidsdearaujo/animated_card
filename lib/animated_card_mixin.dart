@@ -17,6 +17,8 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
   Animation<double> removeAnimation;
   Animation<double> removeHeightAnimation;
 
+  Curve curve;
+
   bool removed;
   Timer initTimer;
   var futures = <StreamSubscription>[];
@@ -24,7 +26,7 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
   Duration get initDelay;
   Duration get duration;
   AnimatedCardDirection get direction;
-  Offset get initOffset; 
+  Offset get initOffset;
 
   @override
   void initState() {
@@ -66,11 +68,18 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
       );
     }
 
+    CurvedAnimation initialCurve() {
+      return CurvedAnimation(
+        curve: curve,
+        parent: controller,
+      );
+    }
+
     //animations
     initAnimation = Tween<Offset>(
       begin: initOffset ?? initialOffset[direction],
       end: Offset(0, 0),
-    ).animate(controller);
+    ).animate(initialCurve());
 
     optionsRemoveButtonAnimation = Tween<double>(
       begin: MediaQuery.of(context).size.width / 2,
