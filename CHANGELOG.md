@@ -1,3 +1,7 @@
+## [1.0.0+8] - 2019.08.27
+
+* Removed ClipRect
+
 ## [1.0.0+7] - 2019.08.23
 
 * Added propertie "curve"
