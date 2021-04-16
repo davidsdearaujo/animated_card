@@ -10,18 +10,17 @@ export 'animated_card_mixin.dart';
 
 class AnimatedCard extends StatefulWidget {
   final bool keepAlive;
-  final void Function() onRemove;
+  final void Function()? onRemove;
   final Widget child;
 
   final AnimatedCardDirection direction;
-  final Duration duration;
-  final Duration initDelay;
-  final Offset initOffset;
+  final Duration? duration;
+  final Duration? initDelay;
+  final Offset? initOffset;
   final Curve curve;
-  bool _removed = false;
   AnimatedCard({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.direction = AnimatedCardDirection.right,
     this.onRemove,
     this.duration,
@@ -29,18 +28,13 @@ class AnimatedCard extends StatefulWidget {
     this.initOffset,
     this.keepAlive = false,
     this.curve = Curves.ease,
-  })  : assert(child != null),
-        super(key: key ?? ((onRemove == null) ? null : UniqueKey()));
+  }) : super(key: key ?? ((onRemove == null) ? null : UniqueKey()));
 
   @override
   _AnimatedCardState createState() => _AnimatedCardState();
 }
 
-class _AnimatedCardState extends State<AnimatedCard>
-    with
-        TickerProviderStateMixin,
-        AnimatedCardMixin,
-        AutomaticKeepAliveClientMixin {
+class _AnimatedCardState extends State<AnimatedCard> with TickerProviderStateMixin, AnimatedCardMixin, AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => widget.keepAlive;
 
@@ -57,14 +51,14 @@ class _AnimatedCardState extends State<AnimatedCard>
   Curve get curve => widget.curve;
 
   @override
-  Offset get initOffset => widget.initOffset;
+  Offset? get initOffset => widget.initOffset;
 
   bool get removeable => widget.onRemove != null;
   bool get notRemoveable => widget.onRemove == null;
 
   @override
   void initState() {
-    removed = widget._removed;
+    removed = false;
     super.initState();
   }
 
@@ -75,9 +69,7 @@ class _AnimatedCardState extends State<AnimatedCard>
       child: _buildRemoveAnimation(
         child: GestureDetector(
           onHorizontalDragUpdate: (details) {
-            if (widget.onRemove != null)
-              optionsController.value +=
-                  details.primaryDelta / MediaQuery.of(context).size.width * 3;
+            if (widget.onRemove != null) optionsController.value += details.primaryDelta! / MediaQuery.of(context).size.width * 3;
           },
           onHorizontalDragEnd: (details) {
             if (optionsController.value > 0.5)
@@ -121,12 +113,9 @@ class _AnimatedCardState extends State<AnimatedCard>
         : AnimatedBuilder(
             animation: removeController,
             builder: (context, childWidget) {
-              var removeButtonX = -MediaQuery.of(context).size.width *
-                  0.2 *
-                  removeAnimation.value;
+              var removeButtonX = -MediaQuery.of(context).size.width * 0.2 * removeAnimation.value;
               return Transform.translate(
-                offset: Offset(
-                    optionsRemoveButtonAnimation.value + removeButtonX, 0),
+                offset: Offset(optionsRemoveButtonAnimation.value + removeButtonX, 0),
                 child: childWidget,
               );
             },
@@ -141,8 +130,8 @@ class _AnimatedCardState extends State<AnimatedCard>
                         futures.add(
                           removeController.forward().asStream().listen(
                             (data) {
-                              widget._removed = true;
-                              widget.onRemove();
+                              removed = true;
+                              widget.onRemove!();
                             },
                           ),
                         );
@@ -176,7 +165,7 @@ class _AnimatedCardState extends State<AnimatedCard>
           );
   }
 
-  Widget _buildRemoveAnimation({Widget child}) {
+  Widget _buildRemoveAnimation({required Widget child}) {
     return notRemoveable
         ? child
         : AnimatedBuilder(

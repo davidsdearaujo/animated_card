@@ -3,30 +3,29 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'animated_card_direction.dart';
 
-mixin AnimatedCardMixin<T extends StatefulWidget>
-    on State<T>, TickerProviderStateMixin<T> {
-  AnimationController controller;
-  Animation<Offset> initAnimation;
+mixin AnimatedCardMixin<T extends StatefulWidget> on State<T>, TickerProviderStateMixin<T> {
+  AnimationController? controller;
+  late Animation<Offset> initAnimation;
 
-  AnimationController optionsController;
-  Animation<double> optionsRemoveButtonAnimation;
-  Animation<double> optionsCardAnimation;
+  late AnimationController optionsController;
+  late Animation<double> optionsRemoveButtonAnimation;
+  late Animation<double> optionsCardAnimation;
 
-  AnimationController removeController;
+  late AnimationController removeController;
 
-  Animation<double> removeAnimation;
-  Animation<double> removeHeightAnimation;
+  late Animation<double> removeAnimation;
+  late Animation<double> removeHeightAnimation;
 
-  Curve curve;
+  Curve? curve;
 
-  bool removed;
-  Timer initTimer;
+  bool? removed;
+  Timer? initTimer;
   var futures = <StreamSubscription>[];
 
   Duration get initDelay;
   Duration get duration;
   AnimatedCardDirection get direction;
-  Offset get initOffset;
+  Offset? get initOffset;
 
   @override
   void initState() {
@@ -36,19 +35,19 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
     controller = AnimationController(
       vsync: this,
       duration: duration,
-      value: removed ? 1 : 0,
+      value: removed == true ? 1 : 0,
     );
 
     optionsController = AnimationController(
       vsync: this,
       duration: Duration(milliseconds: 400),
-      value: removed ? 1 : 0,
+      value: removed == true ? 1 : 0,
     );
 
     removeController = AnimationController(
       vsync: this,
       duration: Duration(seconds: 1),
-      value: removed ? 1 : 0,
+      value: removed == true ? 1 : 0,
     );
   }
 
@@ -70,8 +69,8 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
 
     CurvedAnimation initialCurve() {
       return CurvedAnimation(
-        curve: curve,
-        parent: controller,
+        curve: curve!,
+        parent: controller!,
       );
     }
 
@@ -100,15 +99,15 @@ mixin AnimatedCardMixin<T extends StatefulWidget>
     );
 
     initTimer = Timer(initDelay, () {
-      controller.forward();
+      controller!.forward();
     });
   }
 
   @override
   void dispose() {
-    initTimer.cancel();
+    initTimer!.cancel();
     futures.forEach((f) => f.cancel());
-    controller.dispose();
+    controller!.dispose();
     removeController.dispose();
     super.dispose();
   }
