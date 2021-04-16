@@ -1,3 +1,7 @@
+## [2.0.0] - 2021.04.16
+
+* Migração para null-safety
+
 ## [1.0.0+8] - 2019.08.27
 
 * Removed ClipRect

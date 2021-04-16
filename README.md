@@ -5,12 +5,20 @@ Package to animate the initialization of any widget, with the possibility of usi
 ![](https://github.com/davidsdearaujo/animated_card/raw/master/example.gif) ![](https://github.com/davidsdearaujo/animated_card/raw/master/example2.gif)
 
 ## How to use
-pubspec.yaml
-```
-  animated_card: <lastest version>
-```
 
-import
+**pubspec.yaml**
+
+> To Flutter Version <= 1.22.6
+> ```
+>   animated_card: 1.0.0+8<lastest version>
+> ```
+> 
+> To Flutter Version >= 2.0.0
+> ```
+>   animated_card: <lastest version>
+> ```
+
+**import**
 ```
 import 'package:animated_card/animated_card.dart';
 ```

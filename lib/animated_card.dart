@@ -10,22 +10,22 @@ export 'animated_card_mixin.dart';
 
 class AnimatedCard extends StatefulWidget {
   final bool keepAlive;
-  final void Function() onRemove;
+  final void Function()? onRemove;
   final Widget child;
 
   final AnimatedCardDirection direction;
   final Duration duration;
   final Duration initDelay;
-  final Offset initOffset;
+  final Offset? initOffset;
   final Curve curve;
   bool _removed = false;
   AnimatedCard({
-    Key key,
-    @required this.child,
+    Key? key,
+    required this.child,
     this.direction = AnimatedCardDirection.right,
     this.onRemove,
-    this.duration,
-    this.initDelay,
+    this.duration = const Duration(milliseconds: 600),
+    this.initDelay = const Duration(milliseconds: 200),
     this.initOffset,
     this.keepAlive = false,
     this.curve = Curves.ease,
@@ -36,19 +36,15 @@ class AnimatedCard extends StatefulWidget {
   _AnimatedCardState createState() => _AnimatedCardState();
 }
 
-class _AnimatedCardState extends State<AnimatedCard>
-    with
-        TickerProviderStateMixin,
-        AnimatedCardMixin,
-        AutomaticKeepAliveClientMixin {
+class _AnimatedCardState extends State<AnimatedCard> with TickerProviderStateMixin, AnimatedCardMixin, AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => widget.keepAlive;
 
   @override
-  Duration get initDelay => widget.initDelay ?? Duration(milliseconds: 200);
+  Duration get initDelay => widget.initDelay;
 
   @override
-  Duration get duration => widget.duration ?? Duration(milliseconds: 600);
+  Duration get duration => widget.duration;
 
   @override
   AnimatedCardDirection get direction => widget.direction;
@@ -57,7 +53,7 @@ class _AnimatedCardState extends State<AnimatedCard>
   Curve get curve => widget.curve;
 
   @override
-  Offset get initOffset => widget.initOffset;
+  Offset? get initOffset => widget.initOffset;
 
   bool get removeable => widget.onRemove != null;
   bool get notRemoveable => widget.onRemove == null;
@@ -75,15 +71,17 @@ class _AnimatedCardState extends State<AnimatedCard>
       child: _buildRemoveAnimation(
         child: GestureDetector(
           onHorizontalDragUpdate: (details) {
-            if (widget.onRemove != null)
-              optionsController.value +=
-                  details.primaryDelta / MediaQuery.of(context).size.width * 3;
+            if (widget.onRemove != null) {
+              final primaryDelta = details.primaryDelta ?? 0;
+              optionsController.value += primaryDelta / MediaQuery.of(context).size.width * 3;
+            }
           },
           onHorizontalDragEnd: (details) {
-            if (optionsController.value > 0.5)
+            if (optionsController.value > 0.5) {
               optionsController.forward();
-            else
+            } else {
               optionsController.reverse();
+            }
           },
           child: AnimatedBuilder(
             animation: initAnimation,
@@ -121,12 +119,9 @@ class _AnimatedCardState extends State<AnimatedCard>
         : AnimatedBuilder(
             animation: removeController,
             builder: (context, childWidget) {
-              var removeButtonX = -MediaQuery.of(context).size.width *
-                  0.2 *
-                  removeAnimation.value;
+              var removeButtonX = -MediaQuery.of(context).size.width * 0.2 * removeAnimation.value;
               return Transform.translate(
-                offset: Offset(
-                    optionsRemoveButtonAnimation.value + removeButtonX, 0),
+                offset: Offset(optionsRemoveButtonAnimation.value + removeButtonX, 0),
                 child: childWidget,
               );
             },
@@ -142,7 +137,7 @@ class _AnimatedCardState extends State<AnimatedCard>
                           removeController.forward().asStream().listen(
                             (data) {
                               widget._removed = true;
-                              widget.onRemove();
+                              widget.onRemove?.call();
                             },
                           ),
                         );
@@ -176,7 +171,7 @@ class _AnimatedCardState extends State<AnimatedCard>
           );
   }
 
-  Widget _buildRemoveAnimation({Widget child}) {
+  Widget _buildRemoveAnimation({required Widget child}) {
     return notRemoveable
         ? child
         : AnimatedBuilder(
