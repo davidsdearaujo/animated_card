@@ -1,39 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:animated_card/animated_card.dart';
 
-void main() => runApp(MyApp());
+final lista = List.generate(50, (index) => index);
+
+void main() => runApp(const MyApp());
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  const MyApp();
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Animated Card Example',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: ListagemScreen(),
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: const ListagemScreen(),
     );
   }
 }
 
 class ListagemScreen extends StatelessWidget {
-  final lista = List.generate(50, (index) => index);
+  const ListagemScreen();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("List Animation Example")),
+      appBar: AppBar(title: const Text("List Animation Example")),
       body: ListView.builder(
         itemCount: lista.length,
         itemBuilder: (context, index) {
           return AnimatedCard(
             direction: AnimatedCardDirection.left, //Initial animation direction
-            initDelay: Duration(milliseconds: 0), //Delay to initial animation
-            duration: Duration(seconds: 1), //Initial animation duration
+            initDelay: const Duration(milliseconds: 0), //Delay to initial animation
+            duration: const Duration(seconds: 1), //Initial animation duration
             onRemove: () => lista.removeAt(index), //Implement this action to active dismiss
             curve: Curves.bounceOut, //Animation curve
             child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               child: Card(
                 elevation: 5,
                 child: ListTile(
