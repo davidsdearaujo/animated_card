@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 enum AnimatedCardDirection { left, right, top, bottom }
-Map<AnimatedCardDirection, Offset> initialOffset;
+late Map<AnimatedCardDirection, Offset> initialOffset;
 configureInitialOffset(BuildContext context) {
   initialOffset = {
     AnimatedCardDirection.right: Offset(MediaQuery.of(context).size.width, 0),
